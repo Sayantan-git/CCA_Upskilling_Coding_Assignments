@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assignment_2
+namespace Assignment_3
 {
-    internal class Employee
+    public class Employee
     {
         private int EmpNo { get; set; }
         private string EmpName { get; set; }
@@ -17,7 +18,7 @@ namespace Assignment_2
         private double PF { get; set; }
         private double TDS { get; set; }
         private double NetSalary { get; set; }
-        private double GrossSalary { get; set; }
+        protected double GrossSalary { get; set; }
 
 
         public void EmployeeDetails()
@@ -63,7 +64,7 @@ namespace Assignment_2
 
 
                 }
-                GrossSalary = Salary + HRA + TA + DA;
+                CalculateGrossSalary(Salary, HRA, TA, DA);
                 CalculateSalary(GrossSalary);
 
             }
@@ -78,8 +79,13 @@ namespace Assignment_2
 
             }
         }
+        public virtual void CalculateGrossSalary(double Salary, double HRA, double TA, double DA)
+        {
+            GrossSalary = Salary + HRA + TA + DA;
+        }
         public void CalculateSalary(double GrossSalary)
         {
+
             PF = GrossSalary * 10 / 100;
             TDS = GrossSalary * 18 / 100;
             NetSalary = GrossSalary - (PF + TDS);
@@ -92,6 +98,32 @@ namespace Assignment_2
             Console.WriteLine("TDS is " + TDS);
             Console.WriteLine("NET Salary is " + NetSalary);
         }
-
     }
+    public class Manager : Employee
+    {
+        public override void CalculateGrossSalary(double Salary, double HRA, double TA, double DA)
+        {
+            Console.WriteLine("Petrol Allowance is " + (Salary * 8 / 100));
+            Console.WriteLine("Food Allowance is " + (Salary * 13 / 100));
+            Console.WriteLine("Other Allowance is " + (Salary * 3 / 100));
+            GrossSalary = Salary + HRA + TA + DA + (Salary * 8 / 100) + (Salary * 13 / 100) + (Salary * 3 / 100);
+        }
+    }
+    public class MarketingExcutive : Employee
+    {
+        private double KmTeavled { get; set; }
+
+
+        private float Km { get; set; }
+        public override void CalculateGrossSalary(double Salary, double HRA, double TA, double DA)
+        {
+            Console.WriteLine("How many km will you travel ");
+            Km = Convert.ToInt64(Console.ReadLine());
+            Console.WriteLine("Tour Allowance is" + (Km * 5));
+            Console.WriteLine("Telephone Allovance is " + 1000);
+            GrossSalary = Salary + HRA + TA + DA + (Km * 5) + 1000;
+        }
+    }
+
+
 }
